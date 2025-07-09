@@ -1,0 +1,17 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\InterviewFeedbackSystem",
+    "\\InterviewFeedbackSystem\\Areas",
+    "\\InterviewFeedbackSystem\\Areas\\Identity",
+    "\\InterviewFeedbackSystem\\Areas\\Identity\\Pages",
+    "\\InterviewFeedbackSystem\\Areas\\Identity\\Pages\\Account",
+    "\\InterviewFeedbackSystem\\bin",
+    "\\InterviewFeedbackSystem\\bin\\Debug",
+    "\\InterviewFeedbackSystem\\bin\\Release",
+    "\\InterviewFeedbackSystem\\Controllers",
+    "\\InterviewFeedbackSystem\\Data"
+  ],
+  "SelectedNode": "\\InterviewFeedbackSystem\\libman.json",
+  "PreviewInSolutionExplorer": false
+}

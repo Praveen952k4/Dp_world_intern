@@ -1,0 +1,172 @@
+@model FeedbackViewModel
+
+@{
+    ViewData["Title"] = "Submit Interview Feedback";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="bi bi-clipboard-check me-2"></i>Submit Interview Feedback
+                </h4>
+                <p class="mb-0 mt-2 opacity-75">Help us improve our interview process by sharing your experience</p>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post" id="feedbackForm">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <!-- Candidate Information -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-primary mb-3">
+                                <i class="bi bi-person me-2"></i>Candidate Information
+                            </h5>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="CandidateName" class="form-control" placeholder="Full Name" autocomplete="off" />
+                                <label asp-for="CandidateName"></label>
+                                <span asp-validation-for="CandidateName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="CandidateEmail" class="form-control" placeholder="Email Address" autocomplete="off" />
+                                <label asp-for="CandidateEmail"></label>
+                                <span asp-validation-for="CandidateEmail" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interview Details -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-primary mb-3">
+                                <i class="bi bi-briefcase me-2"></i>Interview Details
+                            </h5>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Position" class="form-control" placeholder="Position Applied" />
+                                <label asp-for="Position"></label>
+                                <span asp-validation-for="Position" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="InterviewerName" class="form-control" placeholder="Interviewer Name" />
+                                <label asp-for="InterviewerName"></label>
+                                <span asp-validation-for="InterviewerName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="InterviewDate" class="form-control" type="date" />
+                                <label asp-for="InterviewDate"></label>
+                                <span asp-validation-for="InterviewDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ratings -->
+                    <div class="mb-4">
+                        <h5 class="text-primary mb-3">
+                            <i class="bi bi-star me-2"></i>Rate Your Experience
+                        </h5>
+                        <div class="row">
+                            @foreach (var rating in new[] {
+                                ("OverallRating", "Overall Experience", "overall"),
+                                ("CommunicationRating", "Communication", "comm"),
+                                ("TechnicalRating", "Technical Assessment", "tech"),
+                                ("ProcessRating", "Interview Process", "process")
+                            })
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="@rating.Item1" class="form-label fw-semibold">@rating.Item2</label>
+                                    <div class="rating-input">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <input type="radio" name="@rating.Item1" value="@i" id="@rating.Item3@i" />
+                                            <label for="@rating.Item3@i" class="star-label">
+                                                <i class="bi bi-star-fill"></i>
+                                            </label>
+                                        }
+                                    </div>
+                                    <span asp-validation-for="@rating.Item1" class="text-danger"></span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Comments -->
+                    <div class="mb-4">
+                        <h5 class="text-primary mb-3">
+                            <i class="bi bi-chat-text me-2"></i>Additional Feedback
+                        </h5>
+                        <div class="form-floating mb-3">
+                            <textarea asp-for="Comments" class="form-control" style="height: 120px" placeholder="Share your detailed feedback..."></textarea>
+                            <label asp-for="Comments"></label>
+                            <span asp-validation-for="Comments" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <textarea asp-for="Suggestions" class="form-control" style="height: 80px" placeholder="Any suggestions for improvement?"></textarea>
+                            <label asp-for="Suggestions"></label>
+                            <span asp-validation-for="Suggestions" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Recommendation -->
+                    <div class="mb-4">
+                        <div class="form-check form-switch">
+                            <input asp-for="WouldRecommend" class="form-check-input" type="checkbox" />
+                            <label asp-for="WouldRecommend" class="form-check-label fw-semibold">
+                                I would recommend this company to others
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a class="btn btn-outline-secondary me-md-2" asp-controller="Home" asp-action="Index">
+                            <i class="bi bi-arrow-left me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-2"></i>Submit Feedback
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.querySelectorAll('.rating-input').forEach(function (group) {
+            const stars = group.querySelectorAll('.star-label');
+            const radios = group.querySelectorAll('input[type="radio"]');
+
+            stars.forEach((star, i) => {
+                star.addEventListener('mouseenter', () => highlight(stars, i + 1));
+                star.addEventListener('click', () => {
+                    radios[i].checked = true;
+                    highlight(stars, i + 1, true);
+                });
+            });
+
+            group.addEventListener('mouseleave', () => {
+                const checked = [...radios].find(r => r.checked);
+                highlight(stars, checked ? [...radios].indexOf(checked) + 1 : 0, true);
+            });
+        });
+
+        function highlight(stars, count, persist = false) {
+            stars.forEach((star, i) => {
+                star.classList.toggle('active', i < count);
+            });
+        }
+    </script>
+}

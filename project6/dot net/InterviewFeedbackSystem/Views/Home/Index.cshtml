@@ -1,0 +1,117 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (User.Identity.IsAuthenticated && (User.IsInRole("HR") || User.IsInRole("Admin")))
+{
+    <!-- This will be handled by the HRDashboard view -->
+}
+else
+{
+    <div class="hero-section bg-primary text-white py-5 mb-5 rounded">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">
+                        <i class="bi bi-clipboard-check me-3"></i>
+                        Interview Feedback System
+                    </h1>
+                    <p class="lead mb-4">
+                        Share your interview experience and help us improve our hiring process. 
+                        Your feedback is valuable and helps us create better experiences for future candidates.
+                    </p>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="btn btn-light btn-lg me-3" asp-controller="Feedback" asp-action="Create">
+                            <i class="bi bi-plus-circle me-2"></i>Submit Feedback
+                        </a>
+                        @if (User.IsInRole("Candidate"))
+                        {
+                            <a class="btn btn-outline-light btn-lg" asp-controller="Feedback" asp-action="MyCandidateFeedback">
+                                <i class="bi bi-person-check me-2"></i>View My Feedback
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <a class="btn btn-light btn-lg me-3" asp-area="Identity" asp-page="/Account/Register">
+                            <i class="bi bi-person-plus me-2"></i>Get Started
+                        </a>
+                        <a class="btn btn-outline-light btn-lg" asp-area="Identity" asp-page="/Account/Login">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                        </a>
+                    }
+                </div>
+                <div class="col-lg-6 text-center">
+                    <i class="bi bi-people display-1 opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-chat-dots text-primary fs-4"></i>
+                        </div>
+                        <h5 class="card-title">Share Your Experience</h5>
+                        <p class="card-text text-muted">
+                            Tell us about your interview experience, from the application process to the final interview.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-star text-success fs-4"></i>
+                        </div>
+                        <h5 class="card-title">Rate & Review</h5>
+                        <p class="card-text text-muted">
+                            Provide ratings for different aspects of the interview process and leave detailed feedback.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-graph-up text-info fs-4"></i>
+                        </div>
+                        <h5 class="card-title">Help Us Improve</h5>
+                        <p class="card-text text-muted">
+                            Your feedback helps us continuously improve our interview process and candidate experience.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-5 text-center">
+                            <h3 class="mb-4">Ready to Share Your Feedback?</h3>
+                            <p class="text-muted mb-4">
+                                Join our feedback system to share your interview experience and help us create better hiring processes.
+                            </p>
+                            <a class="btn btn-primary btn-lg me-3" asp-area="Identity" asp-page="/Account/Register">
+                                <i class="bi bi-person-plus me-2"></i>Create Accounts
+                            </a>
+                            <a class="btn btn-outline-primary btn-lg" asp-area="Identity" asp-page="/Account/Login">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Sign Ins
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

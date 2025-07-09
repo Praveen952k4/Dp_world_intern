@@ -1,0 +1,175 @@
+@model IEnumerable<InterviewFeedback>
+@{
+    ViewData["Title"] = "My Feedback";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2 mb-0">
+        <i class="bi bi-person-check me-2 text-primary"></i>My Interview Feedback
+    </h1>
+    <a class="btn btn-primary" asp-action="Create">
+        <i class="bi bi-plus-circle me-2"></i>Submit New Feedback
+    </a>
+</div>
+
+@if (Model.Any())
+{
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
+                        <i class="bi bi-clipboard-data text-primary fs-5"></i>
+                    </div>
+                    <h4 class="mb-1">@Model.Count()</h4>
+                    <small class="text-muted">Total Feedback</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
+                        <i class="bi bi-star-fill text-success fs-5"></i>
+                    </div>
+                    <h4 class="mb-1">@Model.Average(f => f.AverageRating).ToString("F1")</h4>
+                    <small class="text-muted">Average Rating</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
+                        <i class="bi bi-hand-thumbs-up text-info fs-5"></i>
+                    </div>
+                    <h4 class="mb-1">@Model.Count(f => f.WouldRecommend)</h4>
+                    <small class="text-muted">Recommendations</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
+                        <i class="bi bi-briefcase text-warning fs-5"></i>
+                    </div>
+                    <h4 class="mb-1">@Model.Select(f => f.Position).Distinct().Count()</h4>
+                    <small class="text-muted">Positions</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Cards -->
+    <div class="row g-4">
+        @foreach (var feedback in Model)
+        {
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-light border-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 fw-semibold">@feedback.Position</h6>
+                            <small class="text-muted">@feedback.InterviewDate.ToString("MMM dd, yyyy")</small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-muted">Interviewer:</span>
+                                <span class="fw-semibold">@feedback.InterviewerName</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted">Overall Rating:</span>
+                                <div class="d-flex align-items-center">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="bi bi-star@(i <= feedback.OverallRating ? "-fill text-warning" : " text-muted") me-1"></i>
+                                    }
+                                    <span class="ms-2 fw-semibold">@feedback.OverallRating/5</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rating Breakdown -->
+                        <div class="mb-3">
+                            <h6 class="text-muted mb-2">Rating Breakdown</h6>
+                            <div class="row text-center">
+                                <div class="col-3">
+                                    <div class="small text-muted">Communication</div>
+                                    <div class="fw-semibold text-primary">@feedback.CommunicationRating</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="small text-muted">Technical</div>
+                                    <div class="fw-semibold text-success">@feedback.TechnicalRating</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="small text-muted">Process</div>
+                                    <div class="fw-semibold text-info">@feedback.ProcessRating</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="small text-muted">Average</div>
+                                    <div class="fw-semibold text-warning">@feedback.AverageRating.ToString("F1")</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Comments Preview -->
+                        <div class="mb-3">
+                            <h6 class="text-muted mb-2">Comments</h6>
+                            <p class="text-sm mb-0">
+                                @(feedback.Comments.Length > 100 ? feedback.Comments.Substring(0, 100) + "..." : feedback.Comments)
+                            </p>
+                        </div>
+
+                        <!-- Recommendation Badge -->
+                        <div class="mb-3">
+                            @if (feedback.WouldRecommend)
+                            {
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle me-1"></i>Would Recommend
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">
+                                    <i class="bi bi-x-circle me-1"></i>Would Not Recommend
+                                </span>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                Submitted: @feedback.SubmittedAt.ToString("MMM dd, yyyy")
+                            </small>
+                            @if (User.IsInRole("HR") || User.IsInRole("Admin"))
+                            {
+                                <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@feedback.Id">
+                                    <i class="bi bi-eye me-1"></i>View Details
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <!-- Empty State -->
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="bi bi-clipboard-x display-1 text-muted"></i>
+        </div>
+        <h3 class="text-muted mb-3">No Feedback Yet</h3>
+        <p class="text-muted mb-4">
+            You haven't submitted any interview feedback yet. Share your experience to help us improve our hiring process.
+        </p>
+        <a class="btn btn-primary btn-lg" asp-action="Create">
+            <i class="bi bi-plus-circle me-2"></i>Submit Your First Feedback
+        </a>
+    </div>
+}

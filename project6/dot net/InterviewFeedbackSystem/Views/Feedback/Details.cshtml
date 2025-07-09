@@ -1,0 +1,209 @@
+@model InterviewFeedback
+@{
+    ViewData["Title"] = "Feedback Details";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2 mb-0">
+        <i class="bi bi-eye me-2 text-primary"></i>Feedback Details
+    </h1>
+    <div>
+        <a class="btn btn-outline-secondary" asp-action="Index">
+            <i class="bi bi-arrow-left me-2"></i>Back to List
+        </a>
+        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">
+            <i class="bi bi-trash me-2"></i>Delete
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Main Feedback Card -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Interview Feedback</h5>
+                    <span class="badge bg-light text-dark">
+                        Submitted: @Model.SubmittedAt.ToString("MMM dd, yyyy")
+                    </span>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <!-- Candidate Information -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-2">Candidate Name</h6>
+                        <p class="fw-semibold">@Model.CandidateName</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-2">Email Address</h6>
+                        <p class="fw-semibold">@Model.CandidateEmail</p>
+                    </div>
+                </div>
+
+                <!-- Interview Details -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <h6 class="text-muted mb-2">Position Applied</h6>
+                        <p class="fw-semibold">@Model.Position</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-muted mb-2">Interviewer</h6>
+                        <p class="fw-semibold">@Model.InterviewerName</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-muted mb-2">Interview Date</h6>
+                        <p class="fw-semibold">@Model.InterviewDate.ToString("MMMM dd, yyyy")</p>
+                    </div>
+                </div>
+
+                <!-- Ratings -->
+                <div class="mb-4">
+                    <h6 class="text-muted mb-3">Ratings</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Overall Experience</span>
+                                <div class="d-flex align-items-center">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="bi bi-star@(i <= Model.OverallRating ? "-fill text-warning" : " text-muted") me-1"></i>
+                                    }
+                                    <span class="ms-2 fw-semibold">@Model.OverallRating/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Communication</span>
+                                <div class="d-flex align-items-center">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="bi bi-star@(i <= Model.CommunicationRating ? "-fill text-warning" : " text-muted") me-1"></i>
+                                    }
+                                    <span class="ms-2 fw-semibold">@Model.CommunicationRating/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Technical Assessment</span>
+                                <div class="d-flex align-items-center">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="bi bi-star@(i <= Model.TechnicalRating ? "-fill text-warning" : " text-muted") me-1"></i>
+                                    }
+                                    <span class="ms-2 fw-semibold">@Model.TechnicalRating/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Interview Process</span>
+                                <div class="d-flex align-items-center">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="bi bi-star@(i <= Model.ProcessRating ? "-fill text-warning" : " text-muted") me-1"></i>
+                                    }
+                                    <span class="ms-2 fw-semibold">@Model.ProcessRating/5</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comments -->
+                <div class="mb-4">
+                    <h6 class="text-muted mb-2">Additional Comments</h6>
+                    <div class="bg-light p-3 rounded">
+                        <p class="mb-0">@Model.Comments</p>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Suggestions))
+                {
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-2">Suggestions for Improvement</h6>
+                        <div class="bg-light p-3 rounded">
+                            <p class="mb-0">@Model.Suggestions</p>
+                        </div>
+                    </div>
+                }
+
+                <!-- Recommendation -->
+                <div class="mb-3">
+                    <h6 class="text-muted mb-2">Company Recommendation</h6>
+                    @if (Model.WouldRecommend)
+                    {
+                        <span class="badge bg-success fs-6">
+                            <i class="bi bi-check-circle me-1"></i>Would Recommend
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger fs-6">
+                            <i class="bi bi-x-circle me-1"></i>Would Not Recommend
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Summary Card -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h6 class="mb-0">
+                    <i class="bi bi-graph-up me-2"></i>Summary
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <div class="display-6 text-primary fw-bold">@Model.AverageRating.ToString("F1")</div>
+                    <small class="text-muted">Average Rating</small>
+                </div>
+                
+                <div class="progress mb-3" style="height: 8px;">
+                    <div class="progress-bar bg-primary" style="width: @((Model.AverageRating / 5.0 * 100).ToString("F0"))%"></div>
+                </div>
+
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="border-end">
+                            <div class="h5 mb-0 text-success">@Model.OverallRating</div>
+                            <small class="text-muted">Overall</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="h5 mb-0 text-info">@((Model.OverallRating + Model.CommunicationRating + Model.TechnicalRating + Model.ProcessRating))</div>
+                        <small class="text-muted">Total Points</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light">
+                <h6 class="mb-0">
+                    <i class="bi bi-lightning me-2"></i>Quick Actions
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a class="btn btn-outline-primary btn-sm" asp-action="Index">
+                        <i class="bi bi-list me-2"></i>View All Feedback
+                    </a>
+                    <a class="btn btn-outline-success btn-sm" asp-action="Create">
+                        <i class="bi bi-plus-circle me-2"></i>Add New Feedback
+                    </a>
+                    <a class="btn btn-outline-info btn-sm" asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-house me-2"></i>Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
